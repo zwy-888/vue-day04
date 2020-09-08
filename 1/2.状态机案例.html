@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+
+    <first></first>
+    <second></second>
+
+</div>
+
+<script src="../js/vue.min.js"></script>
+<script src="../js/vuex.3.0.1.js"></script>
+<script>
+    let first = {
+        template: `
+            <div>这是第一个组件
+                <button @click="clickMe">按钮</button>
+            </div>
+        `,
+        methods: {
+            // 5. 动作提交时可以传递参数
+            clickMe(){
+                // 最多只能传递一个参数 可以将参数封装为一个对象传递
+
+                this.$store.commit("editUser", {username: "小黄", pwd: "00000"})
+            },
+        }
+    }
+
+    let second = {
+        template: `
+            <div>这是第二个组件------>{{$store.state.user}}</div>
+        `
+    }
+
+    // 1.导入依赖
+    // 2.创建状态机  初始化状态state与动作mutations
+    let myStore = new Vuex.Store({
+        // 状态：要共享的数据
+        state: {
+            user: {
+                username: "小黑",
+                pwd: "123456",
+            },
+            count: 12,
+        },
+        mutations: {
+            // 组件1提交的动作
+            editUser(state, user){
+                console.log(user);
+                state.user.username = user.username;
+                state.user.pwd = user.pwd;
+            },
+        }
+    })
+    // 3.将状态机注入vue实例中
+    // 4.当从状态机中获取值时，使用$store.state.参数名   js中this.$store.state.参数名
+
+    new Vue({
+        el: "#app",
+        data: {},
+        store: myStore,
+        components: {
+            first: first,
+            second: second,
+        }
+    })
+</script>
+
+</body>
+</html>

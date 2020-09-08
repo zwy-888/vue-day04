@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+    <first></first>
+    <second></second>
+</div>
+
+<script src="js/vue.min.js"></script>
+<script src="js/vue-router.3.0.1.js"></script>
+<script src="js/vuex.3.0.1.js"></script>
+<div>first</div>
+<script>
+    // 相加案例
+    let first = {
+        template: `
+            <div>first子组件
+                <button @click="add">点击相加</button>
+            </div>`,
+        methods: {
+            add(){
+                this.$store.commit("add_num", 11)
+            }
+        }
+    }
+
+    let second = {
+        template: `<div>second子组件
+<span>{{this.$store.getters.rst}}</span>
+</div>`
+    }
+    // 创建虚拟机
+    let myStore = new Vuex.Store({
+        state: {
+            num: [10, 20]
+        },
+        mutations: {
+            add_num: function (state, number) {
+                state.num.push(number)
+            }
+        },
+            getters: {
+                rst: function (state) {
+                    let a = 0
+                    for (let n of state.num) {
+                        a += n;
+                    }
+                    return a
+                }
+            }
+
+    })
+
+    new Vue({
+        el: "#app",
+        data: {},
+        methods: {},
+        components: {
+            first: first,
+            second: second
+        },
+        store: myStore
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+    <first></first>
+    <second></second>
+</div>
+
+<script src="js/vue.min.js"></script>
+<script src="js/vue-router.3.0.1.js"></script>
+<script src="js/vuex.3.0.1.js"></script>
+
+<script>
+    // 相反数
+    //getters 属性类似于compute
+    // 创建子组件
+    let first = {
+        template: `
+            <div>我是子组件first
+                <button @click="add">按钮</button>
+            </div>`,
+        methods: {
+            add() {
+                //向虚拟机传动作
+                this.$store.commit("add_count")
+            }
+        }
+    }
+    let second = {
+        template: `<div>我是子组件first
+{{$store.state.count}}
+<br>
+相反数为{{$store.getters.change_count}}</div>`
+    }
+    let myStore = new Vuex.Store({
+        state: {
+            count: 10
+        },
+        mutations: {
+            add_count: function (state) {
+                state.count--
+            }
+        },
+        getters: {
+            change_count: function (state) {
+                return 0 - state.count
+            }
+        }
+    })
+    new Vue({
+        el: "#app",
+        data: {},
+        methods: {},
+        components: {
+            first: first,
+            second: second,
+        },
+        store: myStore
+    })
+</script>
+
+</body>
+</html>

@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+
+    <first></first>
+    <hr>
+    <second></second>
+
+</div>
+
+<script src="js/vue.min.js"></script>
+<script src="js/vuex.3.0.1.js"></script>
+<script>
+
+    let first = {
+        template: `
+            <div>这是一个组件
+                <button @click="pushData">按钮</button>
+            </div>
+        `,
+        methods: {
+            pushData() {
+                // 当点击按钮时，向状态机中数组添加一个元素
+                this.$store.commit('add_data', 100)
+            },
+        }
+    }
+
+    let second = {
+        template: `
+            <div>这是第二个组件
+                <span>获取状态机中nums的和--->：{{$store.getters.result}}</span>
+            </div>
+        `
+    }
+
+    let myStore = new Vuex.Store({
+        state: {
+            nums: [45, 10]
+        },
+        mutations: {
+            add_data(state, num) {
+                state.nums.push(num)
+            },
+        },
+        getters: {
+            result: function (state) {
+                // 返回变化后的数组的和
+                let res = 0;
+                for (let n of state.nums) {
+                    res += n;
+                }
+                return res;
+            }
+        }
+    })
+
+    new Vue({
+        el: "#app",
+        data: {},
+        components: {
+            first: first,
+            second: second,
+        },
+        store: myStore,
+    })
+</script>
+
+</body>
+</html>

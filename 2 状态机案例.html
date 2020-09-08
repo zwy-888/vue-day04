@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div id="app">
+    <first></first>
+    <second></second>
+</div>
+
+<script src="js/vue.min.js"></script>
+<script src="js/vue-router.3.0.1.js"></script>
+<script src="js/vuex.3.0.1.js"></script>
+
+<script>
+    //  创建子组件first
+    let first = {
+        template: `<div>子组件first
+            <input type="text" v-model="username1">
+            <input type="text" v-model="pwd1">
+        <button @click="add">点击传参</button></div>`,
+        data:{
+            username1:"",
+            pwd:""
+
+    },
+        methods:{
+            add(){
+                // 点击后将信息传给虚拟机的行为
+                this.$store.commit("clickAdd",{username1:this.username1,pwd1:this.pwd1})
+                //此处后面的参数只能传递一个,但是可以封装成一个字典,列表等
+            }
+        }
+    }
+
+    // 创建子组件second
+    let second = {
+        template: `<div>子组件second
+        <span>{{$store.state.users}}</span></div>`,
+        methods: {
+
+        }
+    }
+
+
+    // 创建虚拟机 vuex
+    let myStore = new Vuex.Store({
+        // 储存的数据
+        state: {
+            users:{
+               username:"小红",
+                pwd: "111"
+            }
+        },
+        // 行为 接收的行为
+        mutations: {
+            clickAdd: function (state,user) {
+                state.users.username = user.username
+                state.users.pwd = user.pwd
+
+            }
+        }
+
+    })
+    new Vue({
+        el: "#app",
+        data: {},
+        methods: {},
+        components: {
+            first: first,
+            second: second
+        },
+        //挂载store
+        store: myStore
+    })
+</script>
+
+</body>
+</html>

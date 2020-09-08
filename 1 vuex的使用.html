@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<!--vuex 1 解决兄弟组件之间的传参-->
+<!--vuex 2 -->
+<div id="app">
+
+    <first></first>
+    <hr>
+    <second></second>
+
+</div>
+
+<script src="js/vue.min.js"></script>
+<script src="js/vue-router.3.0.1.js"></script>
+<script src="js/vuex.3.0.1.js"></script>
+
+<script>
+
+    <!--    创建子组件-->
+    let first = {
+        template: `
+            <div>子组件first
+                <input type="button" value="点击数字变大" @click="add">
+            </div>`,
+        methods: {
+            add() {
+                //在函数中提交一个变化  动作  里面的num_add写到状态机里
+                this.$store.commit("num_add")
+            }
+        }
+    }
+
+    let second = {
+        template: `<div>子组件second
+<span>{{$store.state.num}}</span>
+                    </div>`,
+
+    }
+
+    // 创建虚拟机 初始化状态state和行为mutations
+    // 虚拟机中用store.state.参数名，外面（js中）前面加上this
+    let myStore = new Vuex.Store({
+        // 共享的数据
+        state: {
+            num: 3
+        },
+        // 状态机的动作 所有组件提交的动作都可以在此接收
+        mutations: {
+            num_add: function (state) {
+                state.num++
+            }
+        }
+    })
+    new Vue({
+        el: "#app",
+        data: {},
+        methods: {},
+        components: {
+            first: first,
+            second: second,
+        },
+        //注册到实例中
+        store: myStore
+
+    })
+</script>
+
+</body>
+</html>
